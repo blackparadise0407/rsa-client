@@ -1,26 +1,24 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Route, Routes } from 'react-router-dom';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import { Register } from 'modules/auth';
+import { NotFound } from 'components';
+import { Dashboard } from 'modules/dashboard';
+import { MainLayout } from 'layouts';
+import { Landing } from 'modules/landing';
+
+export default function App() {
+    return (
+        <div className="scroll-smooth">
+            <Routes>
+                <Route path="/" element={<MainLayout />}>
+                    <Route index element={<Dashboard />} />
+                </Route>
+                <Route path="/welcome" element={<Landing />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/login" element={<Register />} />
+                <Route path="*" element={<NotFound />} />
+            </Routes>
+        </div>
+    );
 }
-
-export default App;
