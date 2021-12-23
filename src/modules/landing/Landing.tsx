@@ -1,18 +1,27 @@
+import { IMAGES } from 'assets';
 import { Button, FlexGrow } from 'components';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
+import './Landing.css';
+
 export default function Landing() {
     return (
-        <div className="h-screen flex flex-col bg-indigo-200">
+        <div className="landing-page h-screen overflow-y-hidden flex flex-col bg-indigo-200">
             <motion.div
                 animate={{ y: [-200, 0], opacity: [0, 1] }}
                 transition={{ duration: 1 }}
             >
-                <nav className="flex bg-white items-center py-6 px-2 sm:px-10 md:px-20 lg:px-36">
-                    <div className="font-bold">Secure storage</div>
+                <nav className="flex items-center py-6 px-2 sm:px-10 md:px-20 lg:px-36">
+                    <div className="font-bold">
+                        <img
+                            className="w-[129px]"
+                            src={IMAGES.Logo2}
+                            alt="logo"
+                        />
+                    </div>
                     <FlexGrow />
-                    <ul className="flex items-center space-x-10">
+                    <ul className="flex items-center text-xs sm:text-sm md:text-base space-x-5 md:space-x-10">
                         <li className="hover:text-gray-400 transition-colors cursor-pointer">
                             Home
                         </li>
@@ -22,19 +31,19 @@ export default function Landing() {
                         <li className="hover:text-gray-400 transition-colors cursor-pointer">
                             Contact us
                         </li>
-                        <li className="h-10 hover:text-gray-400 transition-colors cursor-pointer">
+                        <li className="hover:text-gray-400 transition-colors cursor-pointer">
                             <Button type="primary">Sign in</Button>
                         </li>
                     </ul>
                 </nav>
             </motion.div>
-            <div className="flex flex-col justify-center h-full  px-2 sm:px-10 md:px-20 lg:px-36">
-                <div className="max-w-xl space-y-5">
+            <div className="flex flex-col justify-center h-full px-2 sm:px-10 md:px-20 lg:px-36">
+                <div className="max-w-full sm:max-w-sm md:max-w-md lg:max-w-lg space-y-5">
                     <motion.div
                         animate={{ x: [-500, 0], opacity: [0, 1] }}
                         transition={{ duration: 1 }}
                     >
-                        <p className="font-bold text-2xl sm:text-3xl md:text-4xl lg:text-6xl">
+                        <p className="font-bold capitalize text-2xl sm:text-3xl md:text-4xl lg:text-6xl">
                             Secure storage
                         </p>
                     </motion.div>
@@ -47,19 +56,16 @@ export default function Landing() {
                             elit. Illum, ea. Debitis dolore distinctio numquam
                             ducimus, natus omnis voluptates necessitatibus iusto
                             ab vel quia voluptatum. Nobis ut minima voluptas
-                            eaque blanditiis ad, fuga natus nemo consectetur
-                            dolor? Tempora consectetur vero quidem.
+                            eaque blanditiis ad.
                         </p>
                     </motion.div>
                     <motion.div
                         animate={{ y: [200, 0], opacity: [0, 1] }}
                         transition={{ duration: 0.5, delay: 1.5 }}
                     >
-                        <div className="h-10">
-                            <Link to="/register">
-                                <Button type="primary">Get started now</Button>
-                            </Link>
-                        </div>
+                        <Link to="/register">
+                            <Button type="primary">Get started now</Button>
+                        </Link>
                     </motion.div>
                 </div>
             </div>

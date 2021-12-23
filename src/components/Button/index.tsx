@@ -30,15 +30,17 @@ export default function Button({
     ...rest
 }: ButtonProps) {
     return (
-        <button
-            className={clsx(
-                'px-4 py-1 font-bold text-base border-b-[5px] active:translate-y-[3px] active:border-b-[2px] transition-all rounded-full',
-                _getButtonClassNameFromType(type),
-            )}
-            type={htmlType}
-            {...rest}
-        >
-            {children}
-        </button>
+        <div className="h-10 flex items-center">
+            <button
+                className={clsx(
+                    'px-3 md:px-4 py-1 font-medium md:font-bold text-sm md:text-base border-b-[5px] active:translate-y-[3px] active:border-b-[2px] transition-all rounded-full',
+                    _getButtonClassNameFromType(type),
+                )}
+                type={htmlType}
+                {...rest}
+            >
+                {children}
+            </button>
+        </div>
     );
 }
