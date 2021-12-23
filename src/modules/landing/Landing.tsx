@@ -1,11 +1,20 @@
-import { IMAGES } from 'assets';
-import { Button, FlexGrow } from 'components';
-import { motion } from 'framer-motion';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+
+import { IMAGES } from 'assets';
+import { Button, FlexGrow, Modal } from 'components';
 
 import './Landing.css';
+import SignInForm from './SignInForm';
 
 export default function Landing() {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleOpenSignIn = () => {
+        setIsModalOpen(!isModalOpen);
+    };
+
     return (
         <div className="landing-page h-screen overflow-y-hidden flex flex-col bg-indigo-200">
             <motion.div
@@ -32,13 +41,15 @@ export default function Landing() {
                             Contact us
                         </li>
                         <li className="hover:text-gray-400 transition-colors cursor-pointer">
-                            <Button type="primary">Sign in</Button>
+                            <Button type="primary" onClick={handleOpenSignIn}>
+                                Sign in
+                            </Button>
                         </li>
                     </ul>
                 </nav>
             </motion.div>
             <div className="flex flex-col justify-center h-full px-2 sm:px-10 md:px-20 lg:px-36">
-                <div className="max-w-full sm:max-w-sm md:max-w-md lg:max-w-lg space-y-5">
+                <div className="max-w-full md:max-w-sm lg:max-w-lg space-y-5">
                     <motion.div
                         animate={{ x: [-500, 0], opacity: [0, 1] }}
                         transition={{ duration: 1 }}
@@ -69,6 +80,10 @@ export default function Landing() {
                     </motion.div>
                 </div>
             </div>
+
+            <Modal open={isModalOpen} onClose={handleOpenSignIn}>
+                <SignInForm />
+            </Modal>
         </div>
     );
 }
