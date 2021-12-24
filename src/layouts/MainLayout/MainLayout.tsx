@@ -1,13 +1,16 @@
-import { Header } from 'components';
+import { Header, Sider } from 'components';
 import { Outlet } from 'react-router-dom';
 
 export default function MainLayout() {
     return (
         <div>
             <Header />
-            <main>
-                <Outlet />
-            </main>
+            <div className="flex">
+                <Sider />
+                <main className="flex-grow bg-gray-100 p-5 overflow-y-auto">
+                    <Outlet />
+                </main>
+            </div>
         </div>
     );
 }

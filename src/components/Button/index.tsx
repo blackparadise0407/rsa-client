@@ -8,6 +8,7 @@ type HTMLButtonType = 'button' | 'submit' | 'reset';
 type ButtonProps = {
     type?: ButtonType;
     htmlType?: HTMLButtonType;
+    block?: boolean;
 } & Omit<HTMLProps<HTMLButtonElement>, 'type'>;
 
 const _getButtonClassNameFromType = (type: ButtonType): string => {
@@ -26,14 +27,18 @@ const _getButtonClassNameFromType = (type: ButtonType): string => {
 export default function Button({
     type = 'default',
     htmlType = 'button',
+    block = false,
     children,
     ...rest
 }: ButtonProps) {
     return (
-        <div className="h-10 flex items-center">
+        <div
+            className={clsx('h-10 flex items-center', block && 'block w-full')}
+        >
             <button
                 className={clsx(
                     'px-3 md:px-4 py-1 font-medium md:font-bold text-sm md:text-base border-b-[5px] active:translate-y-[3px] active:border-b-[2px] transition-all rounded-full',
+                    block && 'block w-full',
                     _getButtonClassNameFromType(type),
                 )}
                 type={htmlType}

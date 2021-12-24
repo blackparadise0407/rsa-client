@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useFormik } from 'formik';
 
 import { Button, Input } from 'components';
-import { IMAGES } from 'assets';
+import { IMAGES, SVGS } from 'assets';
 
 export default function SignInForm() {
     const formik = useFormik({
@@ -17,13 +17,27 @@ export default function SignInForm() {
     return (
         <form
             onSubmit={formik.handleSubmit}
-            className="relative bg-white w-96 px-12 py-8 shadow-xl rounded-3xl overflow-hidden"
+            className="relative bg-white w-96 sm:w-[28rem] px-8 py-8 sm:px-12 shadow-3xl shadow-indigo-400 rounded-3xl"
         >
-            <div>
-                <img className="w-[8rem]" src={IMAGES.Logo2} alt="logo" />
+            <div className="flex flex-col items-center mb-8 space-y-1">
+                <img
+                    className="w-[3rem] sm:w-[4rem]"
+                    src={SVGS.LogoSvg}
+                    alt="logo"
+                />
+                <div className="text-xl sm:text-2xl font-bold text-center">
+                    Sign in with your account
+                </div>
+                <p className="text-xs sm:text-sm text-left">
+                    Don't have an account yet?{' '}
+                    <Link to="/register">
+                        <span className="text-sm text-indigo-600 underline">
+                            Sign up!
+                        </span>
+                    </Link>
+                </p>
             </div>
 
-            <div className="text-2xl font-bold my-4 text-center">Sign in</div>
             <div className="space-y-5">
                 <Input
                     id="name"
@@ -42,16 +56,9 @@ export default function SignInForm() {
                     placeholder="Password"
                 />
             </div>
-            <p className="mt-2 text-sm text-left">
-                Don't have an account yet?{' '}
-                <Link to="/register">
-                    <span className="text-indigo-600 hover:underline">
-                        Sign up!
-                    </span>
-                </Link>
-            </p>
+
             <div className="flex justify-center mt-5 text-center">
-                <Button type="primary" htmlType="submit">
+                <Button type="primary" htmlType="submit" block>
                     Sign in
                 </Button>
             </div>

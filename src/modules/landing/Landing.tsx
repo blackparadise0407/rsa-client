@@ -49,7 +49,7 @@ export default function Landing() {
                 </nav>
             </motion.div>
             <div className="flex flex-col justify-center h-full px-2 sm:px-10 md:px-20 lg:px-36">
-                <div className="max-w-full md:max-w-sm lg:max-w-lg space-y-5">
+                <div className="max-w-full md:max-w-sm lg:max-w-lg space-y-5 md:bg-transparent bg-white bg-opacity-70 p-5 rounded">
                     <motion.div
                         animate={{ x: [-500, 0], opacity: [0, 1] }}
                         transition={{ duration: 1 }}
