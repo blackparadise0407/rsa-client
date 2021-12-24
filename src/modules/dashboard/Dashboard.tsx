@@ -1,3 +1,9 @@
+import { ImageCard } from 'components';
+
 export default function Dashboard() {
-    return <div>Dashboard</div>;
+    return (
+        <div className="">
+            <ImageCard />
+        </div>
+    );
 }

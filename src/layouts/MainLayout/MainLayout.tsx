@@ -7,7 +7,7 @@ export default function MainLayout() {
             <Header />
             <div className="flex">
                 <Sider />
-                <main className="flex-grow bg-gray-100 p-5 overflow-y-auto">
+                <main className="h-[calc(100vh-64px)] flex-auto bg-gray-100 p-5 overflow-y-scroll">
                     <Outlet />
                 </main>
             </div>

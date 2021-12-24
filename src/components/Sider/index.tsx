@@ -6,7 +6,6 @@ import { MdOutlineDashboard } from 'react-icons/md';
 import { BiExpand, BiCollapse } from 'react-icons/bi';
 
 import { FlexGrow } from 'components';
-import { commons } from 'app-constants';
 
 interface ISiderItem {
     key: string;
@@ -38,22 +37,11 @@ const variants = {
 export default function Sider() {
     const { pathname } = useLocation();
     const [selectedKey, setSelectedKey] = useState('dashboard');
-    const [isCollapsed, setIsCollapsed] = useState(
-        Boolean(localStorage.getItem(commons.SIDER_COLLAPSE_KEY)),
-    );
+    const [isCollapsed, setIsCollapsed] = useState(window.innerWidth < 768);
 
     const handleMenuToggleCollapse = useCallback(() => {
         setIsCollapsed(!isCollapsed);
     }, [isCollapsed]);
-
-    useEffect(() => {
-        return () => {
-            localStorage.setItem(
-                commons.SIDER_COLLAPSE_KEY,
-                String(isCollapsed),
-            );
-        };
-    }, []);
 
     useEffect(() => {
         setSelectedKey(pathname);
