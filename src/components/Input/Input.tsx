@@ -11,7 +11,7 @@ export default function Input({ placeholder = '', ...rest }: InputProps) {
                 {...rest}
             />
             {placeholder && (
-                <label className="absolute px-1 pointer-events-none bg-white left-3 sm:left-4 top-0 text-gray-600 -translate-y-1/2 text-sm transition-all peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-1/2 peer-focus:top-0 peer-focus:text-gray-600 peer-focus:text-sm peer-focus:bg-white">
+                <label className="absolute px-1 pointer-events-none bg-white left-3 sm:left-4 top-0 text-gray-600 transform -translate-y-1/2 text-sm transition-all peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-1/2 peer-focus:top-0 peer-focus:text-gray-600 peer-focus:text-sm peer-focus:bg-white">
                     {placeholder}
                 </label>
             )}
