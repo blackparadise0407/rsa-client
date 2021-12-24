@@ -34,7 +34,7 @@ export default function ImageCard({
 
     return (
         <div
-            className="relative w-[200px] rounded shadow-lg overflow-hidden bg-white p-2"
+            className="w-[200px] rounded shadow-lg overflow-hidden bg-white p-3"
             onClick={handleCheck}
         >
             <div className="relative aspect-video rounded overflow-hidden">
