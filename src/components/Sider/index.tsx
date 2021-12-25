@@ -2,10 +2,12 @@ import { ReactNode, useCallback, useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { Link, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { MdOutlineDashboard } from 'react-icons/md';
-import { BiExpand, BiCollapse } from 'react-icons/bi';
+import { MdOutlineDashboard, MdOutlineAccountCircle } from 'react-icons/md';
+import { BiLogOut } from 'react-icons/bi';
+import { RiMenuFoldLine, RiMenuLine } from 'react-icons/ri';
 
 import { FlexGrow } from 'components';
+import { SVGS } from 'assets';
 
 interface ISiderItem {
     key: string;
@@ -22,9 +24,9 @@ const items: ISiderItem[] = [
         callback: () => {},
     },
     {
-        key: 'dashboard',
-        label: 'Dashboard',
-        icon: <MdOutlineDashboard />,
+        key: 'profile',
+        label: 'Profile',
+        icon: <MdOutlineAccountCircle />,
         callback: () => {},
     },
 ];
@@ -51,21 +53,40 @@ export default function Sider() {
         <motion.div
             animate={isCollapsed ? 'collapsed' : 'open'}
             variants={variants}
-            className="relative bg-primary h-[calc(100vh-64px)] w-[230px] overflow-hidden"
+            className="relative bg-primary h-screen w-[230px] overflow-hidden"
         >
-            <ul className="w-full flex flex-col items-center px-4 space-y-4 font-bold">
+            <div
+                className={clsx(
+                    'flex h-[64px] text-xl p-3 items-center text-white',
+                    isCollapsed ? 'justify-center' : 'justify-between',
+                )}
+            >
+                {!isCollapsed && (
+                    <img className="w-[36px]" src={SVGS.Logo2Svg} alt="" />
+                )}
+                <span
+                    className="cursor-pointer"
+                    onClick={handleMenuToggleCollapse}
+                >
+                    {isCollapsed ? <RiMenuLine /> : <RiMenuFoldLine />}
+                </span>
+            </div>
+
+            <ul className="w-full flex flex-col items-center py-5 px-4 space-y-4 font-bold overflow-y-auto">
                 {items.map(({ key, icon, label, callback }) => (
                     <motion.div
                         className="w-full"
                         key={key}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
                     >
                         <Link
                             to={key}
                             className={clsx(
-                                'flex items-center h-10 text-white text-sm px-4 py-2.5 rounded-lg cursor-pointer overflow-hidden',
-                                selectedKey === key && 'bg-white text-primary',
+                                'flex items-center h-10 text-white text-sm px-4 py-2.5 rounded-lg cursor-pointer overflow-hidden hover:text-black',
+                                selectedKey === key
+                                    ? 'bg-white text-primary'
+                                    : 'hover:bg-white transition-colors ',
                                 isCollapsed && 'justify-center',
                             )}
                             onClick={() => {
@@ -73,7 +94,7 @@ export default function Sider() {
                                 callback?.();
                             }}
                         >
-                            <span>{icon}</span>
+                            <span className="text-lg">{icon}</span>
                             {!isCollapsed && (
                                 <span className="ml-2">{label}</span>
                             )}
@@ -118,15 +139,8 @@ export default function Sider() {
                         )}
                     </AnimatePresence>
                     <FlexGrow />
-                    <div
-                        className={clsx('p-2')}
-                        onClick={handleMenuToggleCollapse}
-                    >
-                        {isCollapsed ? (
-                            <BiExpand className="text-white text-xl" />
-                        ) : (
-                            <BiCollapse className="text-white text-xl" />
-                        )}
+                    <div className="p-2 cursor-pointer">
+                        <BiLogOut className="text-white text-xl" />
                     </div>
                 </div>
             </div>
