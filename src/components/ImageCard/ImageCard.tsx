@@ -1,15 +1,17 @@
+import { motion } from 'framer-motion';
+import dayjs from 'dayjs';
 import { BiDownload, BiShare, BiTrashAlt } from 'react-icons/bi';
 
 import { IMAGES } from 'assets';
-import { motion } from 'framer-motion';
+import { FlexGrow } from 'components';
 
 type ImageCardProps = {
     data?: IImage;
     isSelected?: boolean;
     onDownload?: () => void;
-    onShare?: (id: string) => void;
+    onShare?: (id: string | number) => void;
     onDelete?: (id: any) => void;
-    onSelect?: (id: string) => void;
+    onSelect?: (id: string | number) => void;
 };
 
 export default function ImageCard({
@@ -34,17 +36,17 @@ export default function ImageCard({
 
     return (
         <div
-            className="w-[200px] rounded shadow-lg overflow-hidden bg-white p-3"
+            className="min-w-[164px] w-full rounded-lg shadow overflow-hidden bg-white p-3"
             onClick={handleCheck}
         >
-            <div className="relative aspect-video rounded overflow-hidden">
+            <div className="relative aspect-video rounded-lg overflow-hidden">
                 <img
-                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 hover:scale-125 transition-transform"
                     src={data?.url || IMAGES.Placeholder}
                     alt=""
                 />
             </div>
-            <ul className="flex justify-evenly mt-2">
+            <ul className="flex justify-around mt-2">
                 <motion.div
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
@@ -79,6 +81,16 @@ export default function ImageCard({
                     </li>
                 </motion.div>
             </ul>
+            <div className="flex flex-wrap mt-5 text-xs text-gray-500">
+                <span>Author</span>
+                <FlexGrow />
+                <span>
+                    Upload date:{' '}
+                    {dayjs((data.createdAt as number) * 1000).format(
+                        'MMM DD, YYYY',
+                    )}
+                </span>
+            </div>
         </div>
     );
 }
