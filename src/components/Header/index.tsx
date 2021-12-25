@@ -8,7 +8,7 @@ const _renderUser = (user: any) => {
 export default function Header() {
     const { user } = useAuthContext();
     return (
-        <nav className="flex bg-primary px-10 h-[64px] items-center text-white">
+        <nav className="flex bg-primary px-5 h-[64px] items-center text-white">
             <div className="font-bold">Secure storage</div>
             <FlexGrow />
             {!user && _renderUser(user)}
