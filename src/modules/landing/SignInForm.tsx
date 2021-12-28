@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useFormik } from 'formik';
 
 import { Button, Input } from 'components';
-import { IMAGES, SVGS } from 'assets';
+import { SVGS } from 'assets';
 
 export default function SignInForm() {
     const formik = useFormik({
