@@ -30,7 +30,7 @@ export default function Dashboard() {
             <div className="sticky z-50 top-0 right-8 bg-white p-3 rounded-lg shadow transition-all">
                 <ul className="flex flex-wrap space-x-5 select-none">
                     <li
-                        className="flex flex-grow sm:flex-grow-0 p-2 items-center space-x-2 cursor-pointer hover:bg-green-500 hover:text-white hover:shadow-lg rounded transition-all"
+                        className="flex flex-grow sm:flex-grow-0 min-w-[120px] p-2 items-center space-x-2 cursor-pointer hover:bg-green-500 hover:text-white hover:shadow-lg rounded transition-all"
                         onClick={handleSelectOrDeselectAll}
                     >
                         {isSelectAll ? (
