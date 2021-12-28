@@ -13,6 +13,7 @@ import {
 export default function Dashboard() {
     const { data, onSelectSingle, onSelectOrDeselectAll, onDeleteSingle } =
         useImageContext();
+
     const isSelectAll = useMemo(() => data.every((x) => x.isSelected), [data]);
 
     const hasSelectedData = useMemo(
@@ -27,9 +28,9 @@ export default function Dashboard() {
     return (
         <div className="space-y-4">
             <div className="sticky z-50 top-0 right-8 bg-white p-3 rounded-lg shadow transition-all">
-                <ul className="flex flex-wrap space-x-5">
+                <ul className="flex flex-wrap space-x-5 select-none">
                     <li
-                        className="flex flex-grow sm:flex-grow-0 items-center space-x-2 cursor-pointer"
+                        className="flex flex-grow sm:flex-grow-0 p-2 items-center space-x-2 cursor-pointer hover:bg-green-500 hover:text-white hover:shadow-lg rounded transition-all"
                         onClick={handleSelectOrDeselectAll}
                     >
                         {isSelectAll ? (
@@ -43,9 +44,9 @@ export default function Dashboard() {
                     </li>
                     <li
                         className={clsx(
-                            'flex items-center space-x-2 cursor-pointer',
+                            'flex items-center p-2 space-x-2 cursor-pointer hover:bg-blue-500 hover:shadow-lg rounded transition-all',
                             hasSelectedData
-                                ? 'text-blue-500'
+                                ? 'text-blue-500 hover:text-white'
                                 : 'text-gray-400 pointer-events-none',
                         )}
                     >
@@ -54,9 +55,9 @@ export default function Dashboard() {
                     </li>
                     <li
                         className={clsx(
-                            'flex items-center space-x-2 cursor-pointer',
+                            'flex items-center p-2 space-x-2 cursor-pointer hover:bg-red-500 hover:shadow-lg rounded transition-all',
                             hasSelectedData
-                                ? 'text-red-500'
+                                ? 'text-red-500 hover:text-white'
                                 : 'text-gray-400 pointer-events-none',
                         )}
                     >
