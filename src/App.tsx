@@ -1,11 +1,10 @@
-import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 
-import { Register } from 'modules/auth';
 import { NotFound } from 'components';
+import { Register } from 'modules/auth';
 import { Dashboard } from 'modules/dashboard';
-import { MainLayout } from 'layouts';
 import { Landing } from 'modules/landing';
+import { MainLayout } from 'layouts';
 
 export default function App() {
     return (
