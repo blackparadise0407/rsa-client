@@ -7,13 +7,16 @@ import reportWebVitals from './reportWebVitals';
 import AuthContextProvider from './contexts/AuthContext';
 
 import './index.css';
+import ImageContextProvider from 'contexts/ImageContext';
 
 ReactDOM.render(
     <React.StrictMode>
         <AuthContextProvider>
-            <BrowserRouter>
-                <App />
-            </BrowserRouter>
+            <ImageContextProvider>
+                <BrowserRouter>
+                    <App />
+                </BrowserRouter>
+            </ImageContextProvider>
         </AuthContextProvider>
     </React.StrictMode>,
     document.getElementById('root'),
