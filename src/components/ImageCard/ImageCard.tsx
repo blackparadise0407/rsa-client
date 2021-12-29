@@ -90,7 +90,7 @@ export default memo(function ImageCard({
                 </motion.div>
             </ul>
             <div className="flex flex-wrap mt-5 text-xs text-gray-500">
-                <span>Author</span>
+                <span>{data?.user?.name}</span>
                 <FlexGrow />
                 <span>
                     Upload date:{' '}

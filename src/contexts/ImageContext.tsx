@@ -24,6 +24,8 @@ const mockData: IImageState[] = [
         user_id: 'bob',
         createdAt: 1640398365,
         isSelected: false,
+        user: { name: 'Kyle' },
+        url: 'https://i.pravatar.cc/150?img=1',
     },
     {
         id: 2,
@@ -31,6 +33,8 @@ const mockData: IImageState[] = [
         user_id: 'bob',
         createdAt: 1640398365,
         isSelected: false,
+        user: { name: 'Kyle' },
+        url: 'https://i.pravatar.cc/150?img=2',
     },
     {
         id: 3,
@@ -38,6 +42,7 @@ const mockData: IImageState[] = [
         user_id: 'bob',
         createdAt: 1640398365,
         isSelected: false,
+        url: 'https://i.pravatar.cc/150?img=3',
     },
     {
         id: 4,
@@ -45,6 +50,7 @@ const mockData: IImageState[] = [
         user_id: 'bob',
         createdAt: 1640398365,
         isSelected: false,
+        url: 'https://i.pravatar.cc/150?img=4',
     },
     {
         id: 5,
@@ -52,6 +58,7 @@ const mockData: IImageState[] = [
         user_id: 'bob',
         createdAt: 1640398365,
         isSelected: false,
+        url: 'https://i.pravatar.cc/150?img=5',
     },
     {
         id: 6,
@@ -59,6 +66,7 @@ const mockData: IImageState[] = [
         user_id: 'bob',
         createdAt: 1640398365,
         isSelected: false,
+        url: 'https://i.pravatar.cc/150?img=6',
     },
     {
         id: 7,
@@ -66,6 +74,7 @@ const mockData: IImageState[] = [
         user_id: 'bob',
         createdAt: 1640398365,
         isSelected: false,
+        url: 'https://i.pravatar.cc/150?img=7',
     },
     {
         id: 8,
@@ -73,6 +82,7 @@ const mockData: IImageState[] = [
         user_id: 'bob',
         createdAt: 1640398365,
         isSelected: false,
+        url: 'https://i.pravatar.cc/150?img=8',
     },
     {
         id: 9,
@@ -80,6 +90,7 @@ const mockData: IImageState[] = [
         user_id: 'bob',
         createdAt: 1640398365,
         isSelected: false,
+        url: 'https://i.pravatar.cc/150?img=9',
     },
     {
         id: 10,
@@ -87,6 +98,7 @@ const mockData: IImageState[] = [
         user_id: 'bob',
         createdAt: 1640398365,
         isSelected: false,
+        url: 'https://i.pravatar.cc/150?img=10',
     },
     {
         id: 11,
@@ -94,6 +106,7 @@ const mockData: IImageState[] = [
         user_id: 'bob',
         createdAt: 1640398365,
         isSelected: false,
+        url: 'https://i.pravatar.cc/150?img=11',
     },
 ];
 
@@ -171,6 +184,7 @@ function ImageContextProvider({ children }: ImageContextProviderProps) {
 
     useEffect(() => {
         handleFetchImage();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
