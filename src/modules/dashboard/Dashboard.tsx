@@ -21,26 +21,38 @@ export default function Dashboard() {
         [data],
     );
 
-    const handleSelectOrDeselectAll = () => {
-        onSelectOrDeselectAll(isSelectAll);
+    const handleSelectAll = () => {
+        onSelectOrDeselectAll();
+    };
+
+    const handleDeselectAll = () => {
+        onSelectOrDeselectAll(true);
     };
 
     return (
         <div className="space-y-4">
             <div className="sticky z-50 top-0 right-8 bg-white p-3 rounded-lg shadow transition-all">
-                <ul className="flex flex-wrap space-x-5 select-none">
+                <ul className="flex flex-wrap space-x-5 font-semibold select-none">
                     <li
-                        className="flex flex-grow sm:flex-grow-0 min-w-[120px] p-2 items-center space-x-2 cursor-pointer hover:bg-green-500 hover:text-white hover:shadow-lg rounded transition-all"
-                        onClick={handleSelectOrDeselectAll}
-                    >
-                        {isSelectAll ? (
-                            <BiCheckboxMinus />
-                        ) : (
-                            <BiCheckboxChecked />
+                        className={clsx(
+                            'flex flex-grow sm:flex-grow-0 p-2 items-center space-x-2 cursor-pointer text-green-500 hover:bg-green-500 hover:text-white hover:shadow-lg rounded transition-all',
+                            isSelectAll && 'text-gray-400 pointer-events-none',
                         )}
-                        <span className="text-sm">
-                            {isSelectAll ? 'Deselect' : 'Select'} all
-                        </span>
+                        onClick={handleSelectAll}
+                    >
+                        <BiCheckboxChecked />
+                        <span className="text-sm">Select all</span>
+                    </li>
+                    <li
+                        className={clsx(
+                            'flex flex-grow sm:flex-grow-0 p-2 items-center space-x-2 cursor-pointer text-green-500 hover:bg-green-500 hover:text-white hover:shadow-lg rounded transition-all',
+                            !hasSelectedData &&
+                                'text-gray-400 pointer-events-none',
+                        )}
+                        onClick={handleDeselectAll}
+                    >
+                        <BiCheckboxMinus />
+                        <span className="text-sm">Deselect all</span>
                     </li>
                     <li
                         className={clsx(
