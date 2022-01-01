@@ -1,8 +1,10 @@
+import { ACCESS_TOKEN_KEY } from 'app-constants/commons';
 import axios, { AxiosRequestConfig, Method } from 'axios';
+import { get, isArray } from 'lodash';
 import qs from 'query-string';
 
 const axiosClient = axios.create({
-    baseURL: 'http://localhost:8080/api',
+    baseURL: 'http://localhost:8000/',
     headers: {
         'Content-Type': 'application/json',
     },
@@ -11,6 +13,12 @@ const axiosClient = axios.create({
 
 axiosClient.interceptors.request.use(async (config) => {
     // Attach auth token if needed
+    const token = localStorage.getItem(ACCESS_TOKEN_KEY);
+    if (token) {
+        config.headers = {
+            Authorization: token,
+        };
+    }
     return config;
 });
 
@@ -24,7 +32,19 @@ axiosClient.interceptors.response.use(
     },
     // Process error if needed
     (error) => {
-        throw error;
+        const errorData = get(error, ['response', 'data']);
+        if (errorData) {
+            const detail = errorData.detail;
+            if (typeof detail === 'string') {
+                return Promise.reject(detail);
+            }
+            if (isArray(detail) && detail.length) {
+                const { loc, msg } = detail[0];
+                const formattedMsg = loc.join('->') + ' ' + msg;
+                return Promise.reject(formattedMsg);
+            }
+            return Promise.reject('Unknown error');
+        }
     },
 );
 

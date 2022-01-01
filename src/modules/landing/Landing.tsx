@@ -1,19 +1,39 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 import { IMAGES } from 'assets';
 import { Button, FlexGrow, Modal } from 'components';
+import { useAuthContext } from 'contexts/AuthContext';
+import SignInForm from './SignInForm';
+import RegisterForm from './RegisterForm';
 
 import './Landing.css';
-import SignInForm from './SignInForm';
+
+type FormKey = 'signin' | 'register';
 
 export default function Landing() {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const { isAuth } = useAuthContext();
+    const navigate = useNavigate();
+    const [modalKey, setModalKey] = useState<FormKey>(null);
 
     const handleOpenSignIn = () => {
-        setIsModalOpen(!isModalOpen);
+        setModalKey('signin');
     };
+
+    const handleCloseAllModal = () => {
+        setModalKey(null);
+    };
+
+    const handleOpenRegister = () => {
+        setModalKey('register');
+    };
+
+    useEffect(() => {
+        if (isAuth) {
+            navigate('/', { replace: true });
+        }
+    }, [isAuth]);
 
     return (
         <div className="landing-page h-screen overflow-y-hidden flex flex-col bg-indigo-200">
@@ -74,15 +94,18 @@ export default function Landing() {
                         animate={{ y: [200, 0], opacity: [0, 1] }}
                         transition={{ duration: 0.5, delay: 1.5 }}
                     >
-                        <Link to="/register">
-                            <Button type="primary">Get started now</Button>
-                        </Link>
+                        <Button type="primary" onClick={handleOpenRegister}>
+                            Get started now
+                        </Button>
                     </motion.div>
                 </div>
             </div>
 
-            <Modal open={isModalOpen} onClose={handleOpenSignIn}>
+            <Modal open={modalKey === 'signin'} onClose={handleCloseAllModal}>
                 <SignInForm />
+            </Modal>
+            <Modal open={modalKey === 'register'} onClose={handleCloseAllModal}>
+                <RegisterForm />
             </Modal>
         </div>
     );

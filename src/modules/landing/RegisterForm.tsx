@@ -4,15 +4,15 @@ import { Button, Input } from 'components';
 import { SVGS } from 'assets';
 import { useAuthContext } from 'contexts/AuthContext';
 
-export default function SignInForm() {
-    const { onSignIn } = useAuthContext();
+export default function RegisterForm() {
+    const { onRegister } = useAuthContext();
     const formik = useFormik({
         initialValues: {
             username: '',
             password: '',
         },
         onSubmit: async (values) => {
-            await onSignIn(values);
+            await onRegister(values);
         },
     });
     return (
@@ -27,7 +27,7 @@ export default function SignInForm() {
                     alt="logo"
                 />
                 <div className="text-xl sm:text-2xl font-bold text-center">
-                    Sign in with your account
+                    Create your account
                 </div>
             </div>
 
@@ -52,7 +52,7 @@ export default function SignInForm() {
 
             <div className="flex justify-center mt-5 text-center">
                 <Button type="primary" htmlType="submit" block>
-                    Sign in
+                    Register
                 </Button>
             </div>
         </form>

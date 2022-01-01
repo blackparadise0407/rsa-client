@@ -8,6 +8,7 @@ import { RiMenuFoldLine, RiMenuLine } from 'react-icons/ri';
 
 import { FlexGrow } from 'components';
 import { SVGS } from 'assets';
+import { useAuthContext } from 'contexts/AuthContext';
 
 interface ISiderItem {
     key: string;
@@ -38,6 +39,7 @@ const variants = {
 
 export default function Sider() {
     const { pathname } = useLocation();
+    const { user, onSignOut } = useAuthContext();
     const [selectedKey, setSelectedKey] = useState('dashboard');
     const [isCollapsed, setIsCollapsed] = useState(window.innerWidth < 768);
 
@@ -130,7 +132,7 @@ export default function Sider() {
                                     />
                                 </div>
                                 <div className="flex flex-col ml-2 text-white">
-                                    <span>Khoa Pham</span>
+                                    <span>{user?.username}</span>
                                     <span className="text-xs">
                                         Web designer
                                     </span>
@@ -140,7 +142,10 @@ export default function Sider() {
                     </AnimatePresence>
                     <FlexGrow />
                     <div className="p-2 cursor-pointer">
-                        <BiLogOut className="text-white text-xl" />
+                        <BiLogOut
+                            onClick={onSignOut}
+                            className="text-white text-xl"
+                        />
                     </div>
                 </div>
             </div>

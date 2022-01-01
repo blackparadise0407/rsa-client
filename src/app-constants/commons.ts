@@ -1,3 +1,4 @@
 const SIDER_COLLAPSE_KEY = 'SIDER_COLLAPSE_KEY';
+const ACCESS_TOKEN_KEY = 'access_token';
 
-export { SIDER_COLLAPSE_KEY };
+export { SIDER_COLLAPSE_KEY, ACCESS_TOKEN_KEY };
