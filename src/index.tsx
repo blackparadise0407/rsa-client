@@ -5,19 +5,22 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import AuthContextProvider from './contexts/AuthContext';
+import ImageContextProvider from 'contexts/ImageContext';
+import ToastContextProvider from 'contexts/ToastContext';
 
 import './index.css';
-import ImageContextProvider from 'contexts/ImageContext';
 
 ReactDOM.render(
     <React.StrictMode>
-        <AuthContextProvider>
-            <ImageContextProvider>
-                <BrowserRouter>
-                    <App />
-                </BrowserRouter>
-            </ImageContextProvider>
-        </AuthContextProvider>
+        <ToastContextProvider>
+            <AuthContextProvider>
+                <ImageContextProvider>
+                    <BrowserRouter>
+                        <App />
+                    </BrowserRouter>
+                </ImageContextProvider>
+            </AuthContextProvider>
+        </ToastContextProvider>
     </React.StrictMode>,
     document.getElementById('root'),
 );

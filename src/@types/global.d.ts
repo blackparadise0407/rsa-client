@@ -1,14 +1,34 @@
+import { LoginDto, RegisterDto } from 'apis';
 import { Dayjs } from 'dayjs';
-import { RouteProps } from 'react-router-dom';
 
 declare global {
-    type IRoute = RouteProps;
-
     interface IAuthContext {
-        user: any;
-        onSignIn: () => void;
+        user: IUser;
+        isAuth: boolean;
+        onSignIn: (data: LoginDto) => Promise<void>;
         onSignOut: () => void;
-        onRegister: () => void;
+        onRegister: (data: RegisterDto) => Promise<void>;
+    }
+
+    interface IToastContext {
+        toasts: IToastItem[];
+        enqueue: (message: string, opts?: ToastOpts) => void;
+    }
+
+    type ToastOpts = {
+        variant?: IToastType;
+    };
+
+    type IToastType = 'success' | 'error' | 'default';
+    interface IToastItem {
+        id: string;
+        message: string;
+        type: IToastType;
+    }
+
+    interface IUser {
+        id: string;
+        username: string;
     }
 
     interface IImage {
