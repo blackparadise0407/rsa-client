@@ -7,6 +7,9 @@ import {
     useState,
 } from 'react';
 
+import { deleteImages, getCurrentUserImages, uploadImage } from 'apis/image';
+import { useToast } from './ToastContext';
+
 const initialState: IImageContext = {
     loading: false,
     data: [],
@@ -15,100 +18,8 @@ const initialState: IImageContext = {
     onDeleteSingle: () => {},
     onSelectSingle: () => {},
     onSelectOrDeselectAll: () => {},
+    onDeleteMultiple: () => {},
 };
-
-const mockData: IImageState[] = [
-    {
-        id: 1,
-        blob: 'a',
-        user_id: 'bob',
-        createdAt: 1640398365,
-        isSelected: false,
-        user: { name: 'Kyle' },
-        url: 'https://i.pravatar.cc/150?img=1',
-    },
-    {
-        id: 2,
-        blob: 'a',
-        user_id: 'bob',
-        createdAt: 1640398365,
-        isSelected: false,
-        user: { name: 'Kyle' },
-        url: 'https://i.pravatar.cc/150?img=2',
-    },
-    {
-        id: 3,
-        blob: 'a',
-        user_id: 'bob',
-        createdAt: 1640398365,
-        isSelected: false,
-        url: 'https://i.pravatar.cc/150?img=3',
-    },
-    {
-        id: 4,
-        blob: 'a',
-        user_id: 'bob',
-        createdAt: 1640398365,
-        isSelected: false,
-        url: 'https://i.pravatar.cc/150?img=4',
-    },
-    {
-        id: 5,
-        blob: 'a',
-        user_id: 'bob',
-        createdAt: 1640398365,
-        isSelected: false,
-        url: 'https://i.pravatar.cc/150?img=5',
-    },
-    {
-        id: 6,
-        blob: 'a',
-        user_id: 'bob',
-        createdAt: 1640398365,
-        isSelected: false,
-        url: 'https://i.pravatar.cc/150?img=6',
-    },
-    {
-        id: 7,
-        blob: 'a',
-        user_id: 'bob',
-        createdAt: 1640398365,
-        isSelected: false,
-        url: 'https://i.pravatar.cc/150?img=7',
-    },
-    {
-        id: 8,
-        blob: 'a',
-        user_id: 'bob',
-        createdAt: 1640398365,
-        isSelected: false,
-        url: 'https://i.pravatar.cc/150?img=8',
-    },
-    {
-        id: 9,
-        blob: 'a',
-        user_id: 'bob',
-        createdAt: 1640398365,
-        isSelected: false,
-        url: 'https://i.pravatar.cc/150?img=9',
-    },
-    {
-        id: 10,
-        blob: 'a',
-        user_id: 'bob',
-        createdAt: 1640398365,
-        isSelected: false,
-        url: 'https://i.pravatar.cc/150?img=10',
-    },
-    {
-        id: 11,
-        blob: 'a',
-        user_id: 'bob',
-        createdAt: 1640398365,
-        isSelected: false,
-        url: 'https://i.pravatar.cc/150?img=11',
-    },
-];
 
 const ImageContext = createContext<IImageContext>(initialState);
 
@@ -117,6 +28,7 @@ type ImageContextProviderProps = {
 };
 
 function ImageContextProvider({ children }: ImageContextProviderProps) {
+    const { enqueue } = useToast();
     const [state, setState] = useState<
         Omit<
             IImageContext,
@@ -124,62 +36,110 @@ function ImageContextProvider({ children }: ImageContextProviderProps) {
             | 'onSelectOrDeselectAll'
             | 'onSelectSingle'
             | 'onDeleteSingle'
+            | 'onDeleteMultiple'
         >
     >({
         loading: false,
-        data: [...mockData],
+        data: [],
         error: null,
     });
 
-    const handleAddNewImage = () => {};
+    const handleAddNewImage = async (file: File, cb: ErrorCb) => {
+        try {
+            const data = await uploadImage({ file });
+            setState((prev) => {
+                const updateData = [...prev.data];
+                updateData.push({ ...data, isSelected: false });
+                return {
+                    ...prev,
+                    data: updateData,
+                };
+            });
+            enqueue('Upload image successfully', { variant: 'success' });
+            cb(null);
+        } catch (e: any) {
+            enqueue(e, { variant: 'error' });
+            cb(e);
+        }
+    };
 
     const handleFetchImage = async () => {
         setState({ ...state, loading: true });
         try {
+            const images = await getCurrentUserImages();
+            const data: IImageState[] = images.map((x) => ({
+                ...x,
+                isSelected: false,
+            }));
+            setState({ ...state, data });
         } catch (e: any) {
-            setState({ ...state, error: e?.message, loading: false });
+            setState({ ...state, error: e?.message });
         } finally {
-            setState({ ...state, loading: false });
+            setState((prev) => ({ ...prev, loading: false }));
         }
     };
 
-    const handleSelectSingleImage = useCallback(
-        (id: any) => {
-            const foundIdx = state.data.findIndex((x) => x.id === id);
-            const updateData = [...state.data];
+    const handleSelectSingleImage = useCallback((id: any) => {
+        setState((prev) => {
+            const foundIdx = prev.data.findIndex((x) => x.id === id);
+            const updateData = [...prev.data];
             if (foundIdx > -1) {
                 const updateImage = updateData[foundIdx];
                 updateData[foundIdx] = {
                     ...updateImage,
                     isSelected: !updateImage.isSelected,
                 };
-                setState({ ...state, data: updateData });
-            }
-        },
-        [state],
-    );
+                return { ...prev, data: updateData };
+            } else return prev;
+        });
+    }, []);
 
-    const handleSelectOrDeselectAllImage = useCallback(
-        (deselect = false) => {
-            const updateData = state.data.map((x) => ({
+    const handleSelectOrDeselectAllImage = useCallback((deselect = false) => {
+        setState((prev) => ({
+            ...prev,
+            data: prev.data.map((x) => ({
                 ...x,
                 isSelected: !deselect,
-            }));
-            setState({ ...state, data: updateData });
-        },
-        [state],
-    );
+            })),
+        }));
+    }, []);
 
-    const handleDeleteSingleImage = useCallback(
-        (id: any) => {
-            const foundIdx = state.data.findIndex((x) => x.id === id);
-            const updateData = [...state.data];
-            if (foundIdx > -1) {
-                updateData.splice(foundIdx, 1);
-                setState({ ...state, data: updateData });
+    const handleDeleteSingleImage = useCallback(async (id: any) => {
+        try {
+            const msg = await deleteImages([id]);
+            enqueue(msg, { variant: 'success' });
+            setState((prev) => {
+                const foundIdx = prev.data.findIndex((x) => x.id === id);
+                const updateData = [...prev.data];
+                if (foundIdx > -1) {
+                    updateData.splice(foundIdx, 1);
+                    return { ...prev, data: updateData };
+                } else return prev;
+            });
+        } catch (e: any) {
+            enqueue(e, { variant: 'error' });
+        }
+    }, []);
+
+    const handleDeleteMultipleImage = useCallback(
+        async (ids: Array<string>) => {
+            try {
+                const msg = await deleteImages(ids);
+                setState((prev) => {
+                    const updateData = prev.data.filter(
+                        (x) => !ids.includes(x.id),
+                    );
+                    return {
+                        ...prev,
+                        data: updateData,
+                    };
+                });
+                enqueue(msg, { variant: 'success' });
+            } catch (e: any) {
+                enqueue(e, { variant: 'error' });
             }
         },
-        [state],
+        [],
     );
 
     useEffect(() => {
@@ -195,6 +155,7 @@ function ImageContextProvider({ children }: ImageContextProviderProps) {
                 onSelectOrDeselectAll: handleSelectOrDeselectAllImage,
                 onSelectSingle: handleSelectSingleImage,
                 onDeleteSingle: handleDeleteSingleImage,
+                onDeleteMultiple: handleDeleteMultipleImage,
             }}
         >
             {children}

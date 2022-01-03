@@ -9,10 +9,10 @@ import { FlexGrow } from 'components';
 type ImageCardProps = {
     data?: IImage;
     isSelected?: boolean;
-    onDownload?: () => void;
-    onShare?: (id: string | number) => void;
+    onDownload?: (url: string) => void;
+    onShare?: (id: string) => void;
     onDelete?: (id: any) => void;
-    onSelect?: (id: string | number) => void;
+    onSelect?: (id: string) => void;
 };
 
 export default memo(function ImageCard({
@@ -25,7 +25,7 @@ export default memo(function ImageCard({
 }: ImageCardProps) {
     const handleDownload = (e: MouseEvent<HTMLLIElement>) => {
         e.stopPropagation();
-        onDownload();
+        onDownload(data.url);
     };
 
     const handleDelete = (e: MouseEvent<HTMLLIElement>) => {
@@ -90,11 +90,11 @@ export default memo(function ImageCard({
                 </motion.div>
             </ul>
             <div className="flex flex-wrap mt-5 text-xs text-gray-500">
-                <span>{data?.user?.name}</span>
+                <span>{data?.created_by?.username}</span>
                 <FlexGrow />
                 <span>
                     Upload date:{' '}
-                    {dayjs((data.createdAt as number) * 1000).format(
+                    {dayjs((data.created_at as number) * 1000).format(
                         'MMM DD, YYYY',
                     )}
                 </span>

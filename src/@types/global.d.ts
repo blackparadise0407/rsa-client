@@ -1,5 +1,4 @@
 import { LoginDto, RegisterDto } from 'apis';
-import { Dayjs } from 'dayjs';
 
 declare global {
     interface IAuthContext {
@@ -32,12 +31,12 @@ declare global {
     }
 
     interface IImage {
-        id: string | number;
-        url?: string;
+        id: string;
+        url: string;
         blob: string;
-        user_id: string;
-        user?: any;
-        createdAt: Dayjs | number;
+        created_by_id: string;
+        created_by?: IUser;
+        created_at: number;
     }
 
     interface IImageState extends IImage {
@@ -48,10 +47,15 @@ declare global {
         data: IImageState[];
         loading: boolean;
         error: string;
-        onAdd: (data: IImage) => void;
-        onDeleteSingle: (id: any) => void;
-        onSelectSingle: (id: any) => void;
+        onAdd: (data: File, cb?: ErrorCb) => void;
+        onDeleteSingle: (id: string) => void;
+        onSelectSingle: (id: string) => void;
         onSelectOrDeselectAll: (deselect?: boolean) => void;
+        onDeleteMultiple: (ids: Array<string>) => void;
+    }
+
+    interface ErrorCb {
+        (error: string): void;
     }
 }
 

@@ -1,25 +1,50 @@
+import { useCallback, useMemo, useState } from 'react';
 import clsx from 'clsx';
-import { ImageCard } from 'components';
-import { useImageContext } from 'contexts/ImageContext';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useMemo } from 'react';
 import {
     BiDownload,
     BiCheckboxMinus,
     BiTrash,
     BiCheckboxChecked,
+    BiCloudUpload,
 } from 'react-icons/bi';
 
+import { FlexGrow, ImageCard, Modal } from 'components';
+import { useImageContext } from 'contexts/ImageContext';
+import ImageUploadForm from './ImageUploadForm';
+import { useToast } from 'contexts/ToastContext';
+import { getFileNameFromPath } from 'utils';
+
 export default function Dashboard() {
-    const { data, onSelectSingle, onSelectOrDeselectAll, onDeleteSingle } =
-        useImageContext();
+    const {
+        data,
+        onAdd,
+        onSelectSingle,
+        onSelectOrDeselectAll,
+        onDeleteSingle,
+        onDeleteMultiple,
+    } = useImageContext();
+    const { enqueue } = useToast();
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const isSelectAll = useMemo(() => data.every((x) => x.isSelected), [data]);
+
+    const selectedData = useMemo(
+        () => data.filter((x) => x.isSelected),
+        [data],
+    );
 
     const hasSelectedData = useMemo(
         () => data.some((x) => x.isSelected),
         [data],
     );
+
+    const handleUploadImage = (file: File) => {
+        onAdd(file, (err) => {
+            if (err) return;
+            setIsModalOpen(false);
+        });
+    };
 
     const handleSelectAll = () => {
         onSelectOrDeselectAll();
@@ -29,78 +54,130 @@ export default function Dashboard() {
         onSelectOrDeselectAll(true);
     };
 
+    const handleToggleModal = () => {
+        setIsModalOpen((prev) => !prev);
+    };
+
+    const handleRemoveMultipleImages = () => {
+        if (!selectedData.length) return;
+        onDeleteMultiple(selectedData.map((x) => x.id));
+    };
+
+    const handleDownloadSingleImage = useCallback((url: string) => {
+        fetch(url, {
+            method: 'GET',
+            headers: {},
+        })
+            .then((response) => {
+                response.arrayBuffer().then(function (buffer) {
+                    const href = window.URL.createObjectURL(new Blob([buffer]));
+                    const link = document.createElement('a');
+                    link.href = href;
+                    link.setAttribute('download', getFileNameFromPath(url));
+                    document.body.appendChild(link);
+                    link.click();
+                });
+            })
+            .catch(() => {
+                enqueue('Unexpected error happened', { variant: 'error' });
+            });
+    }, []);
+
+    const handleDownloadMultipleImages = useCallback(() => {
+        selectedData.forEach((x) => {
+            handleDownloadSingleImage(x.url);
+        });
+    }, [selectedData]);
+
     return (
-        <div className="space-y-4">
-            <div className="sticky z-50 top-0 right-8 bg-white p-3 rounded-lg shadow transition-all">
-                <ul className="flex flex-wrap space-x-5 font-semibold select-none">
-                    <li
-                        className={clsx(
-                            'flex flex-grow sm:flex-grow-0 p-2 items-center space-x-2 cursor-pointer text-green-500 hover:bg-green-500 hover:text-white hover:shadow-lg rounded transition-all',
-                            isSelectAll && 'text-gray-400 pointer-events-none',
-                        )}
-                        onClick={handleSelectAll}
-                    >
-                        <BiCheckboxChecked />
-                        <span className="text-sm">Select all</span>
-                    </li>
-                    <li
-                        className={clsx(
-                            'flex flex-grow sm:flex-grow-0 p-2 items-center space-x-2 cursor-pointer text-green-500 hover:bg-green-500 hover:text-white hover:shadow-lg rounded transition-all',
-                            !hasSelectedData &&
-                                'text-gray-400 pointer-events-none',
-                        )}
-                        onClick={handleDeselectAll}
-                    >
-                        <BiCheckboxMinus />
-                        <span className="text-sm">Deselect all</span>
-                    </li>
-                    <li
-                        className={clsx(
-                            'flex items-center p-2 space-x-2 cursor-pointer hover:bg-blue-500 hover:shadow-lg rounded transition-all',
-                            hasSelectedData
-                                ? 'text-blue-500 hover:text-white'
-                                : 'text-gray-400 pointer-events-none',
-                        )}
-                    >
-                        <BiDownload />
-                        <span className="text-sm">Download</span>
-                    </li>
-                    <li
-                        className={clsx(
-                            'flex items-center p-2 space-x-2 cursor-pointer hover:bg-red-500 hover:shadow-lg rounded transition-all',
-                            hasSelectedData
-                                ? 'text-red-500 hover:text-white'
-                                : 'text-gray-400 pointer-events-none',
-                        )}
-                    >
-                        <BiTrash />
-                        <span className="text-sm">Delete</span>
-                    </li>
-                </ul>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-5">
-                <AnimatePresence initial={false}>
-                    {data.map((item) => (
-                        <motion.div
-                            key={item.id}
-                            exit={{
-                                scale: 0.4,
-                                opacity: 0,
-                                transition: {
-                                    duration: 0.3,
-                                },
-                            }}
+        <>
+            <div className="space-y-4">
+                <div className="sticky z-10 top-0 right-8 bg-white p-3 rounded-lg shadow transition-all">
+                    <ul className="flex flex-wrap space-x-5 font-semibold select-none">
+                        <li
+                            className="flex items-center p-2 space-x-2 cursor-pointer bg-blue-500 text-white hover:bg-blue-400 rounded transition-colors"
+                            onClick={handleToggleModal}
                         >
-                            <ImageCard
-                                data={item}
-                                isSelected={item.isSelected}
-                                onSelect={onSelectSingle}
-                                onDelete={onDeleteSingle}
-                            />
-                        </motion.div>
-                    ))}
-                </AnimatePresence>
+                            <BiCloudUpload />
+                            <span className="text-sm">Upload</span>
+                        </li>
+                        <FlexGrow />
+                        <li
+                            className={clsx(
+                                'flex flex-grow sm:flex-grow-0 p-2 items-center space-x-2 cursor-pointer text-green-500 hover:bg-green-500 hover:text-white hover:shadow-lg rounded transition-all',
+                                isSelectAll &&
+                                    'text-gray-400 pointer-events-none',
+                            )}
+                            onClick={handleSelectAll}
+                        >
+                            <BiCheckboxChecked />
+                            <span className="text-sm">Select all</span>
+                        </li>
+                        <li
+                            className={clsx(
+                                'flex flex-grow sm:flex-grow-0 p-2 items-center space-x-2 cursor-pointer text-green-500 hover:bg-green-500 hover:text-white hover:shadow-lg rounded transition-all',
+                                !hasSelectedData &&
+                                    'text-gray-400 pointer-events-none',
+                            )}
+                            onClick={handleDeselectAll}
+                        >
+                            <BiCheckboxMinus />
+                            <span className="text-sm">Deselect all</span>
+                        </li>
+                        <li
+                            className={clsx(
+                                'flex items-center p-2 space-x-2 cursor-pointer hover:bg-blue-500 hover:shadow-lg rounded transition-all',
+                                hasSelectedData
+                                    ? 'text-blue-500 hover:text-white'
+                                    : 'text-gray-400 pointer-events-none',
+                            )}
+                            onClick={handleDownloadMultipleImages}
+                        >
+                            <BiDownload />
+                            <span className="text-sm">Download</span>
+                        </li>
+                        <li
+                            className={clsx(
+                                'flex items-center p-2 space-x-2 cursor-pointer hover:bg-red-500 hover:shadow-lg rounded transition-all',
+                                hasSelectedData
+                                    ? 'text-red-500 hover:text-white'
+                                    : 'text-gray-400 pointer-events-none',
+                            )}
+                            onClick={handleRemoveMultipleImages}
+                        >
+                            <BiTrash />
+                            <span className="text-sm">Delete</span>
+                        </li>
+                    </ul>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-5">
+                    <AnimatePresence initial={false}>
+                        {data.map((item) => (
+                            <motion.div
+                                key={item.id}
+                                exit={{
+                                    scale: 0.4,
+                                    opacity: 0,
+                                    transition: {
+                                        duration: 0.3,
+                                    },
+                                }}
+                            >
+                                <ImageCard
+                                    data={item}
+                                    isSelected={item.isSelected}
+                                    onSelect={onSelectSingle}
+                                    onDelete={onDeleteSingle}
+                                    onDownload={handleDownloadSingleImage}
+                                />
+                            </motion.div>
+                        ))}
+                    </AnimatePresence>
+                </div>
             </div>
-        </div>
+            <Modal open={isModalOpen} onClose={handleToggleModal}>
+                <ImageUploadForm onSubmit={handleUploadImage} />
+            </Modal>
+        </>
     );
 }
