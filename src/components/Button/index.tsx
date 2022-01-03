@@ -29,11 +29,16 @@ export default function Button({
     htmlType = 'button',
     block = false,
     children,
+    className,
     ...rest
 }: ButtonProps) {
     return (
         <div
-            className={clsx('h-10 flex items-center', block && 'block w-full')}
+            className={clsx(
+                'h-10 flex items-center',
+                block && 'block w-full',
+                className,
+            )}
         >
             <button
                 className={clsx(
