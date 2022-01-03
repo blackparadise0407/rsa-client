@@ -29,7 +29,7 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
     const { enqueue } = useToast();
     const [user, setUser] = useState(initialState.user);
     const [isAuth, setIsAuth] = useState(initialState.isAuth);
-    const { data, error } = useData(getCurrentUser, null);
+    const { data } = useData(getCurrentUser, null);
 
     const handleSignIn = useCallback(async (data: LoginDto) => {
         try {
@@ -41,8 +41,8 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
             const user = await getCurrentUser();
             setIsAuth(true);
             setUser(user);
-        } catch (e) {
-            console.log(e);
+        } catch (e: any) {
+            enqueue(e, { variant: 'error' });
         }
     }, []);
 
@@ -67,10 +67,6 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
             setIsAuth(true);
         }
     }, [data]);
-
-    useEffect(() => {
-        console.log('error', error);
-    }, [error]);
 
     return (
         <AuthContext.Provider
