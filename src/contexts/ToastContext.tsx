@@ -56,7 +56,7 @@ function ToastContextProvider({ children }: ToastContextProviderProps) {
                 enqueue: handleEnqueueToast,
             }}
         >
-            <div className="fixed top-5 right-5 z-[100] space-y-2">
+            <div className="fixed top-5 right-5 z-[200] space-y-2">
                 <AnimatePresence initial={false}>
                     {toasts.map((x) => (
                         <motion.div
