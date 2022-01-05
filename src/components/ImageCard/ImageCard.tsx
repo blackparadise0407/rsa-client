@@ -5,11 +5,13 @@ import { BiCheck, BiDownload, BiShare, BiTrashAlt } from 'react-icons/bi';
 
 import { IMAGES } from 'assets';
 import { FlexGrow } from 'components';
+import { getImageSrcFromBase64 } from 'utils';
+import { useToast } from 'contexts/ToastContext';
 
 type ImageCardProps = {
     data?: IImage;
     isSelected?: boolean;
-    onDownload?: (url: string) => void;
+    onDownload?: (image: IImage) => void;
     onShare?: (id: string) => void;
     onDelete?: (id: any) => void;
     onSelect?: (id: string) => void;
@@ -23,9 +25,16 @@ export default memo(function ImageCard({
     onShare = () => {},
     onSelect = () => {},
 }: ImageCardProps) {
+    const { enqueue } = useToast();
     const handleDownload = (e: MouseEvent<HTMLLIElement>) => {
         e.stopPropagation();
-        onDownload(data.url);
+        if (!data) {
+            enqueue('Download is not available. Please try again later!', {
+                variant: 'error',
+            });
+            return;
+        }
+        onDownload(data);
     };
 
     const handleDelete = (e: MouseEvent<HTMLLIElement>) => {
@@ -50,7 +59,11 @@ export default memo(function ImageCard({
             <div className="relative aspect-video rounded-lg overflow-hidden">
                 <img
                     className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 hover:scale-110 transition-transform"
-                    src={data?.url || IMAGES.Placeholder}
+                    src={
+                        data?.blob
+                            ? getImageSrcFromBase64(data.blob, data.url)
+                            : IMAGES.Placeholder
+                    }
                     alt=""
                 />
             </div>

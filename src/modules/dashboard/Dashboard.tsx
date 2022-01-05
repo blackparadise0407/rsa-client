@@ -13,7 +13,7 @@ import { FlexGrow, ImageCard, Modal } from 'components';
 import { useImageContext } from 'contexts/ImageContext';
 import ImageUploadForm from './ImageUploadForm';
 import { useToast } from 'contexts/ToastContext';
-import { getFileNameFromPath } from 'utils';
+import { getFileNameFromPath, getImageSrcFromBase64 } from 'utils';
 
 export default function Dashboard() {
     const {
@@ -63,30 +63,19 @@ export default function Dashboard() {
         onDeleteMultiple(selectedData.map((x) => x.id));
     };
 
-    const handleDownloadSingleImage = useCallback((url: string) => {
-        fetch(url, {
-            method: 'GET',
-            headers: {},
-        })
-            .then((response) => {
-                response.arrayBuffer().then(function (buffer) {
-                    const href = window.URL.createObjectURL(new Blob([buffer]));
-                    const link = document.createElement('a');
-                    link.href = href;
-                    link.setAttribute('download', getFileNameFromPath(url));
-                    document.body.appendChild(link);
-                    link.click();
-                });
-            })
-            .catch(() => {
-                enqueue('Unexpected error happened', { variant: 'error' });
-            });
+    const handleDownloadSingleImage = useCallback((data: IImage) => {
+        const link = document.createElement('a');
+        link.href = getImageSrcFromBase64(data.blob, data.url);
+        link.setAttribute(
+            'download',
+            `download-${getFileNameFromPath(data.url)}`,
+        );
+        document.body.appendChild(link);
+        link.click();
     }, []);
 
     const handleDownloadMultipleImages = useCallback(() => {
-        selectedData.forEach((x) => {
-            handleDownloadSingleImage(x.url);
-        });
+        selectedData.forEach(handleDownloadSingleImage);
     }, [selectedData]);
 
     return (

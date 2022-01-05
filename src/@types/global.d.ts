@@ -28,6 +28,7 @@ declare global {
     interface IUser {
         id: string;
         username: string;
+        sym_key: string;
     }
 
     interface IImage {

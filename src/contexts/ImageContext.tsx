@@ -46,15 +46,8 @@ function ImageContextProvider({ children }: ImageContextProviderProps) {
 
     const handleAddNewImage = async (file: File, cb: ErrorCb) => {
         try {
-            const data = await uploadImage({ file });
-            setState((prev) => {
-                const updateData = [...prev.data];
-                updateData.push({ ...data, isSelected: false });
-                return {
-                    ...prev,
-                    data: updateData,
-                };
-            });
+            await uploadImage({ file });
+            await handleFetchImage();
             enqueue('Upload image successfully', { variant: 'success' });
             cb(null);
         } catch (e: any) {
