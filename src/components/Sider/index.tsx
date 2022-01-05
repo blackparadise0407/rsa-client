@@ -24,12 +24,6 @@ const items: ISiderItem[] = [
         icon: <MdOutlineDashboard />,
         callback: () => {},
     },
-    {
-        key: 'profile',
-        label: 'Profile',
-        icon: <MdOutlineAccountCircle />,
-        callback: () => {},
-    },
 ];
 
 const variants = {
