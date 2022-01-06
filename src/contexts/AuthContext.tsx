@@ -50,6 +50,7 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
         setIsAuth(false);
         setUser(null);
         localStorage.removeItem(ACCESS_TOKEN_KEY);
+        window.location.reload();
     }, []);
 
     const handleRegister = useCallback(async (data: RegisterDto) => {
