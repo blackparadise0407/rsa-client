@@ -55,6 +55,7 @@ declare global {
         onSelectSingle: (id: string) => void;
         onSelectOrDeselectAll: (deselect?: boolean) => void;
         onDeleteMultiple: (ids: Array<string>) => void;
+        handleFetchImage: () => void;
     }
 
     interface ErrorCb {
