@@ -13,6 +13,7 @@ import {
     uploadMultipleImages,
 } from 'apis/image';
 import { useToast } from './ToastContext';
+import { useAuthContext } from './AuthContext';
 
 const initialState: IImageContext = {
     loading: false,
@@ -23,6 +24,7 @@ const initialState: IImageContext = {
     onSelectSingle: () => {},
     onSelectOrDeselectAll: () => {},
     onDeleteMultiple: () => {},
+    handleFetchImage: () => {},
 };
 
 const ImageContext = createContext<IImageContext>(initialState);
@@ -33,6 +35,7 @@ type ImageContextProviderProps = {
 
 function ImageContextProvider({ children }: ImageContextProviderProps) {
     const { enqueue } = useToast();
+    const { user } = useAuthContext();
     const [state, setState] = useState<
         Omit<
             IImageContext,
@@ -41,6 +44,7 @@ function ImageContextProvider({ children }: ImageContextProviderProps) {
             | 'onSelectSingle'
             | 'onDeleteSingle'
             | 'onDeleteMultiple'
+            | 'handleFetchImage'
         >
     >({
         loading: false,
@@ -124,7 +128,8 @@ function ImageContextProvider({ children }: ImageContextProviderProps) {
                 const msg = await deleteImages(ids);
                 setState((prev) => {
                     const updateData = prev.data.filter(
-                        (x) => !ids.includes(x.id),
+                        (x) =>
+                            !ids.includes(x.id) || user.id !== x.created_by_id,
                     );
                     return {
                         ...prev,
@@ -136,13 +141,8 @@ function ImageContextProvider({ children }: ImageContextProviderProps) {
                 enqueue(e, { variant: 'error' });
             }
         },
-        [],
+        [user],
     );
-
-    useEffect(() => {
-        handleFetchImage();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
 
     return (
         <ImageContext.Provider
@@ -153,6 +153,7 @@ function ImageContextProvider({ children }: ImageContextProviderProps) {
                 onSelectSingle: handleSelectSingleImage,
                 onDeleteSingle: handleDeleteSingleImage,
                 onDeleteMultiple: handleDeleteMultipleImage,
+                handleFetchImage,
             }}
         >
             {children}

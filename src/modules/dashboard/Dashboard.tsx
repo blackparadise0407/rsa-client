@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import clsx from 'clsx';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
@@ -13,6 +13,8 @@ import { Empty, FlexGrow, ImageCard, MaskedLoader, Modal } from 'components';
 import { useImageContext } from 'contexts/ImageContext';
 import ImageUploadForm from './ImageUploadForm';
 import { getFileNameFromPath, getImageSrcFromBase64 } from 'utils';
+import { useToast } from 'contexts/ToastContext';
+import { shareImageToUserId } from 'apis/shareImage';
 
 export default function Dashboard() {
     const {
@@ -23,7 +25,9 @@ export default function Dashboard() {
         onSelectOrDeselectAll,
         onDeleteSingle,
         onDeleteMultiple,
+        handleFetchImage,
     } = useImageContext();
+    const { enqueue } = useToast();
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const isSelectAll = useMemo(() => data.every((x) => x.isSelected), [data]);
@@ -73,9 +77,30 @@ export default function Dashboard() {
         link.click();
     }, []);
 
+    const handleShareImageToUser = useCallback(
+        async (imageId: string, sharedToId: string, cb: ErrorCb) => {
+            try {
+                const msg = await shareImageToUserId({
+                    image_id: imageId,
+                    shared_to_id: sharedToId,
+                });
+                enqueue(msg, { variant: 'success' });
+                cb(null);
+            } catch (e: any) {
+                enqueue(e, { variant: 'error' });
+                cb(e);
+            }
+        },
+        [],
+    );
+
     const handleDownloadMultipleImages = useCallback(() => {
         selectedData.forEach(handleDownloadSingleImage);
     }, [selectedData]);
+
+    useEffect(() => {
+        handleFetchImage();
+    }, []);
 
     return (
         <>
@@ -158,6 +183,7 @@ export default function Dashboard() {
                                     <ImageCard
                                         data={item}
                                         isSelected={item.isSelected}
+                                        onShare={handleShareImageToUser}
                                         onSelect={onSelectSingle}
                                         onDelete={onDeleteSingle}
                                         onDownload={handleDownloadSingleImage}
