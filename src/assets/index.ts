@@ -1,4 +1,5 @@
 import NotFound from './images/not-found.jpg';
+import Empty from './images/empty.png';
 import Logo from './images/logo.png';
 import Logo2 from './images/logo2.png';
 import Placeholder from './images/placeholder.png';
@@ -10,6 +11,7 @@ const IMAGES = {
     Logo,
     Logo2,
     Placeholder,
+    Empty,
 };
 
 const SVGS = {

@@ -9,14 +9,14 @@ import {
     BiCloudUpload,
 } from 'react-icons/bi';
 
-import { FlexGrow, ImageCard, Modal } from 'components';
+import { Empty, FlexGrow, ImageCard, MaskedLoader, Modal } from 'components';
 import { useImageContext } from 'contexts/ImageContext';
 import ImageUploadForm from './ImageUploadForm';
-import { useToast } from 'contexts/ToastContext';
 import { getFileNameFromPath, getImageSrcFromBase64 } from 'utils';
 
 export default function Dashboard() {
     const {
+        loading,
         data,
         onAdd,
         onSelectSingle,
@@ -24,7 +24,6 @@ export default function Dashboard() {
         onDeleteSingle,
         onDeleteMultiple,
     } = useImageContext();
-    const { enqueue } = useToast();
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const isSelectAll = useMemo(() => data.every((x) => x.isSelected), [data]);
@@ -39,8 +38,8 @@ export default function Dashboard() {
         [data],
     );
 
-    const handleUploadImage = (file: File) => {
-        onAdd(file, (err) => {
+    const handleUploadImage = (files: CustomFile[]) => {
+        onAdd(files, (err) => {
             if (err) return;
             setIsModalOpen(false);
         });
@@ -80,6 +79,7 @@ export default function Dashboard() {
 
     return (
         <>
+            {loading && <MaskedLoader />}
             <div className="space-y-4">
                 <div className="sticky z-10 top-0 right-8 bg-white p-3 rounded-lg shadow transition-all">
                     <ul className="flex flex-wrap space-x-5 font-semibold select-none">
@@ -139,30 +139,34 @@ export default function Dashboard() {
                         </li>
                     </ul>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-5">
-                    <AnimatePresence initial={false}>
-                        {data.map((item) => (
-                            <motion.div
-                                key={item.id}
-                                exit={{
-                                    scale: 0.4,
-                                    opacity: 0,
-                                    transition: {
-                                        duration: 0.3,
-                                    },
-                                }}
-                            >
-                                <ImageCard
-                                    data={item}
-                                    isSelected={item.isSelected}
-                                    onSelect={onSelectSingle}
-                                    onDelete={onDeleteSingle}
-                                    onDownload={handleDownloadSingleImage}
-                                />
-                            </motion.div>
-                        ))}
-                    </AnimatePresence>
-                </div>
+                {!data.length && !loading ? (
+                    <Empty />
+                ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-5">
+                        <AnimatePresence initial={false}>
+                            {data.map((item) => (
+                                <motion.div
+                                    key={item.id}
+                                    exit={{
+                                        scale: 0.4,
+                                        opacity: 0,
+                                        transition: {
+                                            duration: 0.3,
+                                        },
+                                    }}
+                                >
+                                    <ImageCard
+                                        data={item}
+                                        isSelected={item.isSelected}
+                                        onSelect={onSelectSingle}
+                                        onDelete={onDeleteSingle}
+                                        onDownload={handleDownloadSingleImage}
+                                    />
+                                </motion.div>
+                            ))}
+                        </AnimatePresence>
+                    </div>
+                )}
             </div>
             <Modal open={isModalOpen} onClose={handleToggleModal}>
                 <ImageUploadForm onSubmit={handleUploadImage} />

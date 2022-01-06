@@ -25,6 +25,8 @@ declare global {
         type: IToastType;
     }
 
+    type CustomFile = File & { id: string };
+
     interface IUser {
         id: string;
         username: string;
@@ -48,7 +50,7 @@ declare global {
         data: IImageState[];
         loading: boolean;
         error: string;
-        onAdd: (data: File, cb?: ErrorCb) => void;
+        onAdd: (data: Array<CustomFile>, cb?: ErrorCb) => void;
         onDeleteSingle: (id: string) => void;
         onSelectSingle: (id: string) => void;
         onSelectOrDeselectAll: (deselect?: boolean) => void;

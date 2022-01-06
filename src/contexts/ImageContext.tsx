@@ -7,7 +7,11 @@ import {
     useState,
 } from 'react';
 
-import { deleteImages, getCurrentUserImages, uploadImage } from 'apis/image';
+import {
+    deleteImages,
+    getCurrentUserImages,
+    uploadMultipleImages,
+} from 'apis/image';
 import { useToast } from './ToastContext';
 
 const initialState: IImageContext = {
@@ -44,11 +48,11 @@ function ImageContextProvider({ children }: ImageContextProviderProps) {
         error: null,
     });
 
-    const handleAddNewImage = async (file: File, cb: ErrorCb) => {
+    const handleAddNewImage = async (files: CustomFile[], cb: ErrorCb) => {
         try {
-            await uploadImage({ file });
+            await uploadMultipleImages({ files });
             await handleFetchImage();
-            enqueue('Upload image successfully', { variant: 'success' });
+            enqueue('Upload images successfully', { variant: 'success' });
             cb(null);
         } catch (e: any) {
             enqueue(e, { variant: 'error' });

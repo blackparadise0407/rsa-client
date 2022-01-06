@@ -73,7 +73,7 @@ export default memo(function ImageCard({
                     whileTap={{ scale: 0.9 }}
                 >
                     <li
-                        className="p-2 text-green-500 bg-gray-100 rounded-md hover:bg-white hover:border-green-500 transition-colors cursor-pointer border border-gray-100"
+                        className="p-2 text-green-500 bg-gray-100 rounded-md hover:text-white hover:bg-green-500 hover:shadow-md transition-colors cursor-pointer"
                         onClick={handleDownload}
                     >
                         <BiDownload />
@@ -84,7 +84,7 @@ export default memo(function ImageCard({
                     whileTap={{ scale: 0.9 }}
                 >
                     <li
-                        className="p-2 text-blue-500 bg-gray-100 rounded-md hover:bg-white hover:border-blue-500 transition-colors cursor-pointer border border-gray-100"
+                        className="p-2 text-blue-500 bg-gray-100 rounded-md hover:text-white hover:bg-blue-500 hover:shadow-md transition-colors cursor-pointer"
                         onClick={handleShare}
                     >
                         <BiShare />
@@ -95,7 +95,7 @@ export default memo(function ImageCard({
                     whileTap={{ scale: 0.9 }}
                 >
                     <li
-                        className="p-2 text-red-500 bg-gray-100 rounded-md hover:bg-white hover:border-red-500 transition-colors cursor-pointer border border-gray-100"
+                        className="p-2 text-red-500 bg-gray-100 rounded-md hover:text-white hover:bg-red-500 hover:shadow-md transition-colors cursor-pointer"
                         onClick={handleDelete}
                     >
                         <BiTrashAlt />
