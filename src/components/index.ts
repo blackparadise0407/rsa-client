@@ -6,6 +6,7 @@ export { default as FlexGrow } from './FlexGrow';
 export { default as Button } from './Button';
 export { default as Empty } from './Empty';
 export { default as MaskedLoader } from './MaskedLoader';
+export { default as Spinner } from './Spinner';
 export { Modal } from './Modal';
 export { Input } from './Input';
 export { ImageCard } from './ImageCard';
