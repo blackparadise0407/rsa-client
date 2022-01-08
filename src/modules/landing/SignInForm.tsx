@@ -5,7 +5,7 @@ import { SVGS } from 'assets';
 import { useAuthContext } from 'contexts/AuthContext';
 
 export default function SignInForm() {
-    const { onSignIn } = useAuthContext();
+    const { loading, onSignIn } = useAuthContext();
     const formik = useFormik({
         initialValues: {
             username: '',
@@ -51,7 +51,12 @@ export default function SignInForm() {
             </div>
 
             <div className="flex justify-center mt-5 text-center">
-                <Button type="primary" htmlType="submit" block>
+                <Button
+                    loading={loading}
+                    type="primary"
+                    htmlType="submit"
+                    block
+                >
                     Sign in
                 </Button>
             </div>
