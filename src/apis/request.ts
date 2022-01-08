@@ -4,7 +4,7 @@ import { get, isArray } from 'lodash';
 import qs from 'query-string';
 
 const axiosClient = axios.create({
-    baseURL: 'http://localhost:8000/',
+    baseURL: process.env.REACT_APP_BASE_URL || 'http://localhost:8000/',
     headers: {
         'Content-Type': 'application/json',
     },
@@ -45,6 +45,7 @@ axiosClient.interceptors.response.use(
             }
             return Promise.reject('Unknown error');
         }
+        return Promise.reject('Network error');
     },
 );
 
