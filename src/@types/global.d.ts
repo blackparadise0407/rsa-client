@@ -4,6 +4,7 @@ declare global {
     interface IAuthContext {
         user: IUser;
         isAuth: boolean;
+        loading: boolean;
         onSignIn: (data: LoginDto) => Promise<void>;
         onSignOut: () => void;
         onRegister: (data: RegisterDto) => Promise<void>;
