@@ -120,9 +120,9 @@ export default memo(function ImageCard({
                     >
                         <li
                             className={clsx(
-                                ' p-2 text-blue-500 bg-gray-100 rounded-md hover:text-white hover:bg-blue-500 hover:shadow-md transition-colors cursor-pointer',
+                                'p-2 text-blue-500 bg-gray-100 rounded-md hover:text-white hover:bg-blue-500 hover:shadow-md transition-colors cursor-pointer',
                                 isSharedImage &&
-                                    'pointer-events-none text-gray-400',
+                                    'pointer-events-none !text-gray-400',
                             )}
                             onClick={handleOpenShareDialog}
                         >
@@ -157,7 +157,7 @@ export default memo(function ImageCard({
                         className={clsx(
                             'p-2 text-red-500 bg-gray-100 rounded-md hover:text-white hover:bg-red-500 hover:shadow-md transition-colors cursor-pointer',
                             isSharedImage &&
-                                'pointer-events-none text-gray-400',
+                                'pointer-events-none !text-gray-400',
                         )}
                         onClick={handleDelete}
                     >
