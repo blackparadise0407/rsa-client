@@ -69,21 +69,21 @@ function ImageContextProvider({ children }: ImageContextProviderProps) {
         [],
     );
 
-    const handleFetchImage = async () => {
-        setState({ ...state, loading: true });
+    const handleFetchImage = useCallback(async () => {
+        setState((prev) => ({ ...prev, loading: true }));
         try {
             const images = await getCurrentUserImages();
             const data: IImageState[] = images.map((x) => ({
                 ...x,
                 isSelected: false,
             }));
-            setState({ ...state, data });
+            setState((prev) => ({ ...prev, data }));
         } catch (e: any) {
-            setState({ ...state, error: e?.message });
+            setState((prev) => ({ ...prev, error: e }));
         } finally {
             setState((prev) => ({ ...prev, loading: false }));
         }
-    };
+    }, []);
 
     const handleSelectSingleImage = useCallback((id: any) => {
         setState((prev) => {
