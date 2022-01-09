@@ -51,17 +51,23 @@ function ImageContextProvider({ children }: ImageContextProviderProps) {
         error: null,
     });
 
-    const handleAddNewImage = async (files: CustomFile[], cb: ErrorCb) => {
-        try {
-            await uploadMultipleImages({ files });
-            await handleFetchImage();
-            enqueue('Upload images successfully', { variant: 'success' });
-            cb(null);
-        } catch (e: any) {
-            enqueue(e, { variant: 'error' });
-            cb(e);
-        }
-    };
+    const handleAddNewImage = useCallback(
+        async (files: CustomFile[], cb: ErrorCb) => {
+            setState((prev) => ({ ...prev, loading: true }));
+            try {
+                await uploadMultipleImages({ files });
+                await handleFetchImage();
+                enqueue('Upload images successfully', { variant: 'success' });
+                cb(null);
+            } catch (e: any) {
+                enqueue(e, { variant: 'error' });
+                cb(e);
+            } finally {
+                setState((prev) => ({ ...prev, loading: false }));
+            }
+        },
+        [],
+    );
 
     const handleFetchImage = async () => {
         setState({ ...state, loading: true });

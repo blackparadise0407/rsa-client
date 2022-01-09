@@ -16,10 +16,12 @@ import { validateImageMimeType } from 'utils';
 import { v4 } from 'uuid';
 
 type ImageUploadFormProps = {
+    loading?: boolean;
     onSubmit?: (files: CustomFile[]) => void;
 };
 
 export default memo(function ImageUploadForm({
+    loading = false,
     onSubmit,
 }: ImageUploadFormProps) {
     const { enqueue } = useToast();
@@ -111,7 +113,7 @@ export default memo(function ImageUploadForm({
                 ))}
             </div>
             <div className="flex justify-end mt-2">
-                <Button onClick={handleSubmit} type="primary">
+                <Button loading={loading} onClick={handleSubmit} type="primary">
                     Submit
                 </Button>
             </div>

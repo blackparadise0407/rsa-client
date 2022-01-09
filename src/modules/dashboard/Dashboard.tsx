@@ -195,7 +195,10 @@ export default function Dashboard() {
                 )}
             </div>
             <Modal open={isModalOpen} onClose={handleToggleModal}>
-                <ImageUploadForm onSubmit={handleUploadImage} />
+                <ImageUploadForm
+                    loading={loading}
+                    onSubmit={handleUploadImage}
+                />
             </Modal>
         </>
     );
